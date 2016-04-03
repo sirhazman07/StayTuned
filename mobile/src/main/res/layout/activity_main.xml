@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#505050"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="androidcourse.staytuned.MainActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="#b1b4b6" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/imageView"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <ImageButton
+            android:id="@+id/imageButtonLatina"
+            android:layout_width="0dp"
+            android:layout_height="115dp"
+            android:layout_alignLeft="@+id/imageView"
+            android:layout_alignStart="@+id/imageView"
+            android:layout_below="@+id/imageView"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@drawable/image_rounded_corner"
+            android:scaleType="centerInside"
+            android:src="@drawable/logo_latina_television" />
+
+        <ImageButton
+            android:id="@+id/imageButtonAmerica"
+            android:layout_width="0dp"
+            android:layout_height="115dp"
+            android:layout_below="@+id/imageView"
+            android:layout_margin="5dp"
+            android:layout_toEndOf="@+id/imageButtonLatina"
+            android:layout_toRightOf="@+id/imageButtonLatina"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@drawable/image_rounded_corner"
+            android:scaleType="centerInside"
+            android:src="@drawable/logo_america_television" />
+
+        <ImageButton
+            android:id="@+id/imageButtonAtv"
+            android:background="@drawable/image_rounded_corner"
+            android:layout_width="0dp"
+            android:layout_height="115dp"
+            android:layout_below="@+id/imageView"
+            android:layout_margin="5dp"
+            android:layout_toEndOf="@+id/imageButtonAmerica"
+            android:layout_toRightOf="@+id/imageButtonAmerica"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/logo_atv_television" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout1"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <ImageButton
+            android:id="@+id/imageButtonGlobal"
+            android:background="@drawable/image_rounded_corner"
+            android:layout_width="0dp"
+            android:layout_height="115dp"
+            android:layout_alignLeft="@+id/imageView"
+            android:layout_alignStart="@+id/imageView"
+            android:layout_below="@+id/imageView"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="false"
+            android:scaleType="centerInside"
+            android:src="@drawable/logo_global_television" />
+
+        <ImageButton
+            android:id="@+id/imageButtonCmd"
+            android:background="@drawable/image_rounded_corner"
+            android:scaleType="centerInside"
+            android:adjustViewBounds="true"
+            android:layout_width="0dp"
+            android:layout_height="115dp"
+            android:layout_below="@+id/imageView"
+            android:layout_margin="5dp"
+            android:layout_toEndOf="@+id/imageButtonGlobal"
+            android:layout_toRightOf="@+id/imageButtonGlobal"
+            android:layout_weight="1"
+            android:src="@drawable/logo_cable_magico_deportes" />
+
+        <ImageButton
+            android:id="@+id/imageButtonPanamericana"
+            android:scaleType="centerInside"
+            android:background="@drawable/image_rounded_corner"
+            android:adjustViewBounds="true"
+            android:layout_width="0dp"
+            android:layout_height="115dp"
+            android:layout_below="@+id/imageView"
+            android:layout_margin="5dp"
+            android:layout_toEndOf="@+id/imageButtonCmd"
+            android:layout_toRightOf="@+id/imageButtonCmd"
+            android:layout_weight="1"
+            android:src="@drawable/logo_panamerican_television" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout2"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <ImageButton
+            android:id="@+id/imageButtonAtvPlus"
+            android:scaleType="centerInside"
+            android:background="@drawable/image_rounded_corner"
+            android:adjustViewBounds="true"
+            android:layout_width="0dp"
+            android:layout_height="115dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:src="@drawable/logo_atvplus_television" />
+
+        <ImageButton
+            android:id="@+id/imageButtonTvPeru"
+            android:scaleType="centerInside"
+            android:adjustViewBounds="true"
+            android:layout_width="0dp"
+            android:background="@drawable/image_rounded_corner"
+            android:layout_height="115dp"
+            android:layout_below="@+id/imageView"
+            android:layout_margin="5dp"
+            android:layout_toEndOf="@+id/imageButtonAtvPlus"
+            android:layout_toRightOf="@+id/imageButtonAtvPlus"
+            android:layout_weight="1"
+            android:src="@drawable/logo_tv_peru_television" />
+
+        <ImageButton
+            android:id="@+id/imageButtonCapital"
+            android:scaleType="centerInside"
+            android:adjustViewBounds="true"
+            android:background="@drawable/image_rounded_corner"
+            android:layout_width="0dp"
+            android:layout_height="115dp"
+            android:layout_below="@+id/imageView2"
+            android:layout_margin="5dp"
+            android:layout_toEndOf="@+id/imageButtonTvPeru"
+            android:layout_toRightOf="@+id/imageButtonTvPeru"
+            android:layout_weight="1"
+            android:src="@drawable/logo_capital_television" />
+
+    </LinearLayout>
+</RelativeLayout>
