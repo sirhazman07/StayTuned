@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/select_device"
+        android:icon="@drawable/banner_pic_small"
+        android:title="select device"/>
+    <item android:id="@+id/start_stream_switch"
+        android:icon="@drawable/banner_pic_small"
+        android:title="stream"/>
+</menu>
