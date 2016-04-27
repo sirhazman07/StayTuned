@@ -1,10 +1,12 @@
 package androidcourse.staytuned;
 
 import android.app.Activity;
+import android.app.MediaRouteActionProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.Image;
+import android.media.MediaRouter;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +32,7 @@ import java.lang.Object;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+//Note to always check MainActivity extends AppCompact when using Cast(Sender and Receiver)
 public class MainActivity extends AppCompatActivity {
     //Add interstinial Ad object, note that this uses java.lang.Object
     /*private InterstinialAd mInterstinialAd;*/
@@ -52,17 +55,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toast.makeText(getApplicationContext(),"Welcome", Toast.LENGTH_LONG).show();
-
-        /*AdView mAdView = (AdView) findViewById(R.id.adView);
-        mAdView.setAdSize(AdSize.SMART_BANNER);
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("YOUR_DEVICE_HASH")
+        //TODO: add casting (Sender)
+        //obtain an instance of the MediaRouter and needs to hold onto that instance for the lifetime of the sender application
+        mMediaRouter = MediaRouter.getInstance(getApplicationContext());
+        //filter discovery for Cast devices that can launch the receiver application associated with the sender app
+        //For that a MediaRouteSelector is created by calling MediaRouteSelector.Builder:
+        mMediaROuteSelector = new MediaRouteSelector.Builder()
+                .addControlCategory(CastMediaControlIntent.categoryForCast("YOUR_APPLICATION_ID"))
                 .build();
-        mAdView.loadAd(adRequest);*/
-        //didn't work so removed it
-        //final Uri latinaUri = Uri.parse(extras.getString("http://www.latina.pe/tvenvivo/"));
-        //TODO: get reference for the textSwitcher and set the change status(not streaming, streaming to device) +
-        //TODO: fix this so it talks to the menu item button (startStreaming) for streaming and updates the listener below (btnNext)
+        //The MediaRouteSelector is then assigned to the MediaRouteActionProvider in the ActionBar menu:
+
+        //TODO: get reference for the textSwitcher and set the change status(not streaming, streaming to device) + DONE
+        //TODO: fix this so it talks to the menu item button (startStreaming) for streaming and updates the listener below (btnNext) DONE
         //Get the button(from the menu)
         ImageButton streamButton= (ImageButton) findViewById(R.id.start_stream_switch);
         mSwitcher = (TextSwitcher) findViewById(R.id.textSwitcherStreamingStatus);
@@ -99,11 +103,11 @@ public class MainActivity extends AppCompatActivity {
         //ClickListener for NEXT button
         //When click on Button TextSwitcher will switch between texts set above
         //The Current Text will go OUT and the next text will come in with specified animation
-        //TODO: fix this and assign to menu icon (start_stream) click event
+        //TODO: fix this and assign to menu icon (start_stream) click event DONE
         streamButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: Auto-generated method stub
+                //TODO: Auto-generated method stub DONE
                 currentIndex++;
                 //If index reaches maximum reset it
                 if (currentIndex== messageCount)
@@ -112,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //TODO: NEW CHANNEL LATINA TV
+        //TODO: NEW CHANNEL LATINA TV DONE- NEEDS DIRECT REPOSITORY
         //TODO: get the ImageButton and pass the url
         final String latinaUrl = new String("http://www.latina.pe/tvenvivo/");
         //create reference to ImageButton
@@ -154,6 +158,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
     //TODO:Creates the Options Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -161,6 +167,18 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.streaming_menu,menu);
         return true;
     }
+    //TODO:he MediaRouteSelector is then assigned to the MediaRouteActionProvider in the ActionBar menu:
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.streaming_menu, menu);
+        MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
+        MediaRouteActionProvider mediaRouteActionProvider =
+                (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
+        mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
+        return true;
+    }
+
     @Override
     protected void onActivityResult (int requestCode, int resultCode, Intent data){
         if (requestCode == REQUEST_TAKE_VIDEO && resultCode == RESULT_OK){
@@ -187,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
                 //Create the File where the video should go
                 File videoFile = null;
                 try {
+                    Toast.makeText(MainActivity.this, "Recording Started", Toast.LENGTH_SHORT).show();
                      videoFile = createVideoFile();
                 } catch (IOException ex){
                     //Error occurred while creating the File

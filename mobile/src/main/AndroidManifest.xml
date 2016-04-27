@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="androidcourse.staytuned">
+    <!--This is the permission for use casting (google API)-->
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="23" />
+
 
     <!--This is the permission for write to external storage-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -28,6 +33,12 @@
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".MainActivity" />
+
+        <!--//Reference the Google PLay Services client Library inside the application element-->
+        <!--Note that if you are using Google Play Services client library with the Android Gradle plugin (as when using Android Studio), you do not need to specify this meta data.-->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>
