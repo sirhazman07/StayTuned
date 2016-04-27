@@ -1,31 +1,49 @@
 package androidcourse.staytuned;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Image;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.Object;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
     //Add interstinial Ad object, note that this uses java.lang.Object
     /*private InterstinialAd mInterstinialAd;*/
     private TextSwitcher mSwitcher;
-    //Adding the array for the textswitcher
-    String textToShow[] = {"main HeadLIne", "Your Message","New in Technology", "New Articles"};
-    int messageCounter = textToShow.length;
+    //action listener for the new button, Video Path string and Request for video count
+    private String currentVideoPath;
+    static final int REQUEST_TAKE_VIDEO = 1;
+    //Menu with Items
+    private MenuItem item;
+    //Adding the array for the TextSwitcher
+    String textToShow[] = {"Status: Not Streaming", "Status: Streaming to Device..."};
+    //also add the menu button to trigger the switch on the TextSwitcher
+    private ImageButton streamButton;
+    int messageCount = textToShow.length;
     // to keep current index of text
     int currentIndex = -1;
 
@@ -43,17 +61,28 @@ public class MainActivity extends AppCompatActivity {
         mAdView.loadAd(adRequest);*/
         //didn't work so removed it
         //final Uri latinaUri = Uri.parse(extras.getString("http://www.latina.pe/tvenvivo/"));
-        //TODO: get reference for the textSwitcher and set the change status(not streaming, streaming to device)
+        //TODO: get reference for the textSwitcher and set the change status(not streaming, streaming to device) +
+        //TODO: fix this so it talks to the menu item button (startStreaming) for streaming and updates the listener below (btnNext)
         //Get the button(from the menu)
-        ImageButton button= (ImageButton) findViewById(R.id.imageButtonAmerica);
+        ImageButton streamButton= (ImageButton) findViewById(R.id.start_stream_switch);
         mSwitcher = (TextSwitcher) findViewById(R.id.textSwitcherStreamingStatus);
-        //set the view factory of the TextSwitcher that will create Textview object when asked
+        //set the view factory of the TextSwitcher that will create TextView object when asked
         mSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
             @Override
             public View makeView() {
+                //NOTE IMPORTANT: Text switcher is an empty container in which we will create a new textView and pass Set values(an array etc).Yai!
                 TextView myText = new TextView(MainActivity.this);
                 myText.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
                 myText.setTextSize(30);
+                //Get the text and change the background for each result
+                String getText = myText.getText().toString();
+                if (getText == "Status: Streaming to Device..."){
+
+                    myText.setBackgroundColor(Color.GREEN);
+                } else
+                {
+                    myText.setBackgroundColor(Color.RED);
+                }
                 myText.setAllCaps(true);
                 myText.setTextColor(Color.WHITE);
                 return myText;
@@ -70,9 +99,10 @@ public class MainActivity extends AppCompatActivity {
         //ClickListener for NEXT button
         //When click on Button TextSwitcher will switch between texts set above
         //The Current Text will go OUT and the next text will come in with specified animation
-        btnNext.setonClickListener(new view.OnClickListener(){
-
-            public void onCLick(View v){
+        //TODO: fix this and assign to menu icon (start_stream) click event
+        streamButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 //TODO: Auto-generated method stub
                 currentIndex++;
                 //If index reaches maximum reset it
@@ -122,6 +152,79 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "America Television", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    //TODO:Creates the Options Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.streaming_menu,menu);
+        return true;
+    }
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data){
+        if (requestCode == REQUEST_TAKE_VIDEO && resultCode == RESULT_OK){
+            //disable video icon
+            item.setVisible(false);
+        }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.select_device) {
+
+        }
+        else if (item.getItemId() == R.id.start_stream_switch){
+            Intent returnHomeIntent = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(returnHomeIntent);
+            finish();
+        }
+        else if (item.getItemId() == R.id.record_screen){
+            Intent takeVideoIntent = new Intent (MediaStore.ACTION_VIDEO_CAPTURE);
+            //Ensure that there's a camera activity to handle the intent
+            if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
+                //Create the File where the video should go
+                File videoFile = null;
+                try {
+                     videoFile = createVideoFile();
+                } catch (IOException ex){
+                    //Error occurred while creating the File
+                    Toast.makeText(MainActivity.this, "Error occurred while creating the Video File",
+                            Toast.LENGTH_SHORT).show();
+                }
+                //Continue only if the File was successfully created
+                if ( videoFile != null){
+                    takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                            Uri.fromFile( videoFile));
+                    startActivityForResult(takeVideoIntent, REQUEST_TAKE_VIDEO);
+                }
+            }
+        }
+        else if (item.getItemId() == R.id.return_home){
+            Intent returnHomeIntent = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(returnHomeIntent);
+            finish();
+        }
+        return true;
+    }
+
+    //TODO: Create and Name Video File (to Local Storage)
+    private File createVideoFile () throws IOException{
+        //create an image FIle name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String videoFileName = "MP4_" + timeStamp + "_";
+        //getExternalFilesDir makes photos to remain private to your app only
+        File storageDir = getExternalFilesDir(null);
+        File video = File.createTempFile(
+                videoFileName, /* [prefix */
+                "mp4",          /* suffix  */
+                storageDir      /* directory */
+        );
+        // Save the file: path for use with ACTION_VIEW intents
+        currentVideoPath = video.getAbsolutePath();
+        //NOTE: Maybe make a void because you still want to continue viewing the stream
+        return video;
     }
 
 }

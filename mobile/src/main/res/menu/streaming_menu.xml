@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/select_device"
-        android:icon="@drawable/banner_pic_small"
-        android:title="select device"/>
+        android:icon="@drawable/select_device_icon"
+        android:title="Select Device"
+        app:showAsAction="ifRoom"/>
     <item android:id="@+id/start_stream_switch"
-        android:icon="@drawable/banner_pic_small"
-        android:title="stream"/>
+        android:icon="@drawable/start_stream_icon"
+        android:title="Start/Stop Stream"
+        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/return_home"
+        android:icon="@drawable/return_home_icon"
+        android:title="Return Home"
+        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/record_screen"
+        android:icon="@drawable/record_screen_icon"
+        android:title="Record Screen"
+        app:showAsAction="ifRoom"/>
 </menu>
