@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     // to keep current index of text
     int currentIndex = -1;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
