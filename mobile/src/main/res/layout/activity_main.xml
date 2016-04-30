@@ -14,12 +14,13 @@
         android:id="@+id/imageView"
         android:layout_width="fill_parent"
         android:layout_height="80dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:adjustViewBounds="true"
         android:background="#b1b4b6"
         android:scaleType="centerCrop"
-        android:src="@drawable/banner_pic_small" />
+        android:src="@drawable/banner_pic_small"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextSwitcher
         android:id="@+id/textSwitcherStreamingStatus"
@@ -195,5 +196,16 @@
             android:src="@drawable/logo_capital_television" />
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="BIS Systems - 2016 All rights reserved "
+        android:background="#ffffff"
+        android:id="@+id/textView"
+        android:layout_below="@+id/linearLayout3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
