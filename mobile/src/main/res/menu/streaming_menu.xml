@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/select_device"
         android:icon="@drawable/select_device_icon"
-        android:title="Select Device"
+        android:title="@string/menu_select_device"
         app:showAsAction="ifRoom"/>
     <item android:id="@+id/media_route_menu_item"
         android:icon="@drawable/start_stream_icon"
@@ -12,10 +12,10 @@
         app:showAsAction="always"/>
     <item android:id="@+id/return_home"
         android:icon="@drawable/return_home_icon"
-        android:title="Return Home"
+        android:title="@string/menu_return_home"
         app:showAsAction="ifRoom"/>
     <item android:id="@+id/record_screen"
         android:icon="@drawable/record_screen_icon"
-        android:title="Record Screen"
+        android:title="@string/menu_record_screen"
         app:showAsAction="ifRoom"/>
 </menu>

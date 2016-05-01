@@ -25,17 +25,15 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.Object;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-//Note to always check MainActivity extends AppCompact when using Cast(Sender and Receiver)
+//Note to always check MainActivity extends AppCompact when using Cast(Sender and Receiver)(on by default)
 public class MainActivity extends AppCompatActivity {
-    //Add interstinial Ad object, note that this uses java.lang.Object
-    /*private InterstinialAd mInterstinialAd;*/
+
     private TextSwitcher mSwitcher;
     //action listener for the new button, Video Path string and Request for video count
     private String currentVideoPath;
@@ -57,19 +55,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toast.makeText(getApplicationContext(),"Welcome", Toast.LENGTH_LONG).show();
         //TODO: add casting (Sender)
-        //obtain an instance of the MediaRouter and needs to hold onto that instance for the lifetime of the sender application
-        mMediaRouter = MediaRouter.getInstance(getApplicationContext());
-        //filter discovery for Cast devices that can launch the receiver application associated with the sender app
-        //For that a MediaRouteSelector is created by calling MediaRouteSelector.Builder:
-        mMediaROuteSelector = new MediaRouteSelector.Builder()
-                .addControlCategory(CastMediaControlIntent.categoryForCast("YOUR_APPLICATION_ID"))
-                .build();
-        //The MediaRouteSelector is then assigned to the MediaRouteActionProvider in the ActionBar menu:
-
         //TODO: get reference for the textSwitcher and set the change status(not streaming, streaming to device) + DONE
         //TODO: fix this so it talks to the menu item button (startStreaming) for streaming and updates the listener below (btnNext) DONE
-        //Get the button(from the menu)
-        ImageButton streamButton= (ImageButton) findViewById(R.id.start_stream_switch);
+        //Get the switch(from the menu)
+        ImageButton streamButton= (ImageButton) findViewById(R.id.media_route_menu_item);
         mSwitcher = (TextSwitcher) findViewById(R.id.textSwitcherStreamingStatus);
         //set the view factory of the TextSwitcher that will create TextView object when asked
         mSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
@@ -105,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
         //When click on Button TextSwitcher will switch between texts set above
         //The Current Text will go OUT and the next text will come in with specified animation
         //TODO: fix this and assign to menu icon (start_stream) click event DONE
+        //Assert the button exists on the view Activity
+        assert streamButton != null;
         streamButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,19 +115,22 @@ public class MainActivity extends AppCompatActivity {
         ImageButton buttonLatina = (ImageButton) findViewById(R.id.imageButtonLatina);
         //set listener
         //TODO:Set Listener to handle click event
-        buttonLatina.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            Intent intent = new Intent(MainActivity.this,ChannelView.class);
-                //TODO: pass URI to the live stream
-                intent.setData(Uri.parse(latinaUrl));
-                //put extra didn't work so removed it
-                //intent.putExtra("http://www.latina.pe/tvenvivo/",latinaUri);
-                startActivity(intent);
-                //Uneccessary Toast? Not
-                Toast.makeText(MainActivity.this, "Frequencia Latina", Toast.LENGTH_SHORT).show();
-            }
-        });
+        //if the button exists in the Menu
+        if (buttonLatina != null) {
+            buttonLatina.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,ChannelView.class);
+                    //TODO: pass URI to the live stream
+                    intent.setData(Uri.parse(latinaUrl));
+                    //put extra didn't work so removed it
+                    //intent.putExtra("http://www.latina.pe/tvenvivo/",latinaUri);
+                    startActivity(intent);
+                    //Uneccessary Toast? Not
+                    Toast.makeText(MainActivity.this, "Frequencia Latina", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
         //TODO: NEW CHANNEL AMERICA TV
 
         final String americaUrl = new String("http://www.latina.pe/tvenvivo/");
@@ -144,39 +138,31 @@ public class MainActivity extends AppCompatActivity {
         ImageButton buttonAmerica = (ImageButton) findViewById(R.id.imageButtonAmerica);
         //set listener
         //TODO:Set Listener to handle click event
-        buttonAmerica.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,ChannelView.class);
-                //TODO: pass URI to the live stream
-                intent.setData(Uri.parse(americaUrl));
-                //put extra didn't work so removed it
-                //intent.putExtra("http://www.latina.pe/tvenvivo/",latinaUri);
-                startActivity(intent);
-                //Uneccessary Toast? think Not
-                Toast.makeText(MainActivity.this, "America Television", Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (buttonAmerica != null) {
+            buttonAmerica.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this,ChannelView.class);
+                    //TODO: pass URI to the live stream
+                    intent.setData(Uri.parse(americaUrl));
+                    //put extra didn't work so removed it
+                    //intent.putExtra("http://www.latina.pe/tvenvivo/",latinaUri);
+                    startActivity(intent);
+                    //Uneccessary Toast? think Not
+                    Toast.makeText(MainActivity.this, "America Television", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
 
 
     //TODO:Creates the Options Menu
+    //Also assign mediaRouteSelector to MediaRouteActionProvider in the action Bar menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.streaming_menu,menu);
-        return true;
-    }
-    //TODO:he MediaRouteSelector is then assigned to the MediaRouteActionProvider in the ActionBar menu:
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.streaming_menu, menu);
-        MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
-        MediaRouteActionProvider mediaRouteActionProvider =
-                (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
-        mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
         return true;
     }
 
@@ -192,9 +178,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.select_device) {
-
+            Intent returnHomeIntent = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(returnHomeIntent);
+            finish();
         }
-        else if (item.getItemId() == R.id.start_stream_switch){
+        else if (item.getItemId() == R.id.return_home){
             Intent returnHomeIntent = new Intent(getApplicationContext(),MainActivity.class);
             startActivity(returnHomeIntent);
             finish();

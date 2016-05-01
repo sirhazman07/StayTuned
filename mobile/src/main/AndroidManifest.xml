@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="androidcourse.staytuned">
     <!--This is the permission for use casting (google API)-->
-    <uses-sdk
+    <!--<uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="23" />
+        android:targetSdkVersion="23" />-->
 
 
     <!--This is the permission for write to external storage-->
@@ -27,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChannelView"></activity>
+        <activity android:name=".ChannelView"/>
 
         <!--//meta-data is used to create the return narrow in the left top corner of your activity-->
         <meta-data
