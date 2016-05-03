@@ -2,6 +2,7 @@
     <string name="app_name">StayTuned</string>
     <string name="text_credits">BIS Systems - 2016 All rights reserved</string>
     <string name="main_banner_add">Main Banner Add</string>
+    <string name="media_route_menu_title">Start Stream</string>
     <string name="menu_return_home">Return Home</string>
     <string name="menu_select_device">Select Device</string>
     <string name="menu_record_screen">Record Screen</string>

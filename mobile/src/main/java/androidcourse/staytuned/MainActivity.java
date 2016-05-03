@@ -9,8 +9,10 @@ import android.media.Image;
 import android.media.MediaRouter;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.media.MediaRouteSelector;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +27,12 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
+import com.google.android.gms.cast.Cast;
+import com.google.android.gms.cast.CastDevice;
+import com.google.android.gms.cast.CastMediaControlIntent;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.Object;
@@ -49,12 +57,21 @@ public class MainActivity extends AppCompatActivity {
     int currentIndex = -1;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mMediaROuter = MediaRouter.getInstance(getApplicationContext());
         Toast.makeText(getApplicationContext(),"Welcome", Toast.LENGTH_LONG).show();
         //TODO: add casting (Sender)
+        mMediaRouteSelector = new MediaRouteSelector.Builder()
+                .addControlCategory(CastMediaControlIntent.categoryForCast("YOUR_APPLICATION_ID"))
+                .build();
+
+
+
         //TODO: get reference for the textSwitcher and set the change status(not streaming, streaming to device) + DONE
         //TODO: fix this so it talks to the menu item button (startStreaming) for streaming and updates the listener below (btnNext) DONE
         //Get the switch(from the menu)
@@ -155,6 +172,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.OnStart();
+        mMediaRouter.addCalback(mMediaRouteSelector , mMediaRouterCallback,
+                MediaRouter.CALLBACK_FLAG_REQUEST_DISCOVERY);
+    }
+
+    @Override
+    protected void onStop() {
+        mMediaRouter.removeCallback(mMediaRouterCallback);
+        super.onStop();
+    }
+    Cast.CastOptions.Builder apiOptionsBuilder = Cast.CastOptions
+            .builder(mSelectedDevice, mCastClientListener);
+
+    mApiClient = new GoogleApiClient.Builder(this)
+            .addApi(Cast.API, apiOptionsBuilder.build())
+            .addConnectionCallbacks(mConnectionCallbacks)
+    .addOnConnectionFailedListener(mConnectionFailedListener)
+    .build();
 
 
     //TODO:Creates the Options Menu
@@ -163,6 +200,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.streaming_menu,menu);
+        MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
+        MediaRouteActionProvider mediaRouteActionProvider =
+                (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
+        mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
         return true;
     }
 
@@ -233,6 +274,23 @@ public class MainActivity extends AppCompatActivity {
         currentVideoPath = video.getAbsolutePath();
         //NOTE: Maybe make a void because you still want to continue viewing the stream
         return video;
+
+        //TODO: MEdia Router CallBack
+        private class MyMediaRouterCallback extends MediaRouter.Callback {
+
+            @Override
+            public void onRouteSelected(MediaRouter router, MediaRouter.RouteInfo info) {
+                mSelectedDevice = CastDevice.getFromBundle(info.getExtras());
+                String routeId = info.getId();
+
+            }
+
+            @Override
+            public void onRouteUnselected(MediaRouter router, MediaRouter.RouteInfo info) {
+                teardown();
+                mSelectedDevice = null;
+            }
+        }
     }
 
 }
