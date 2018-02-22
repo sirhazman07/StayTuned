@@ -57,25 +57,22 @@ public class MainActivity extends AppCompatActivity {
     int currentIndex = -1;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mMediaROuter = MediaRouter.getInstance(getApplicationContext());
-        Toast.makeText(getApplicationContext(),"Welcome", Toast.LENGTH_LONG).show();
+        /*MediaRouter mMediaRouter = MediaRouter.getInstance(getApplicationContext());*/
+        Toast.makeText(getApplicationContext(), "Welcome", Toast.LENGTH_LONG).show();
         //TODO: add casting (Sender)
-        mMediaRouteSelector = new MediaRouteSelector.Builder()
+        MediaRouteSelector mMediaRouteSelector = new MediaRouteSelector.Builder()
                 .addControlCategory(CastMediaControlIntent.categoryForCast("YOUR_APPLICATION_ID"))
                 .build();
-
 
 
         //TODO: get reference for the textSwitcher and set the change status(not streaming, streaming to device) + DONE
         //TODO: fix this so it talks to the menu item button (startStreaming) for streaming and updates the listener below (btnNext) DONE
         //Get the switch(from the menu)
-        ImageButton streamButton= (ImageButton) findViewById(R.id.media_route_menu_item);
+        ImageButton streamButton = (ImageButton) findViewById(R.id.media_route_menu_item);
         mSwitcher = (TextSwitcher) findViewById(R.id.textSwitcherStreamingStatus);
         //set the view factory of the TextSwitcher that will create TextView object when asked
         mSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
@@ -87,11 +84,10 @@ public class MainActivity extends AppCompatActivity {
                 myText.setTextSize(30);
                 //Get the text and change the background for each result
                 String getText = myText.getText().toString();
-                if (getText == "Status: Streaming to Device..."){
+                if (getText == "Status: Streaming to Device...") {
 
                     myText.setBackgroundColor(Color.GREEN);
-                } else
-                {
+                } else {
                     myText.setBackgroundColor(Color.RED);
                 }
                 myText.setAllCaps(true);
@@ -119,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
                 //TODO: Auto-generated method stub DONE
                 currentIndex++;
                 //If index reaches maximum reset it
-                if (currentIndex== messageCount)
-                    currentIndex=0;
+                if (currentIndex == messageCount)
+                    currentIndex = 0;
                 mSwitcher.setText(textToShow[currentIndex]);
             }
         });
@@ -137,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
             buttonLatina.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,ChannelView.class);
+                    Intent intent = new Intent(MainActivity.this, ChannelView.class);
                     //TODO: pass URI to the live stream
                     intent.setData(Uri.parse(latinaUrl));
                     //put extra didn't work so removed it
@@ -159,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             buttonAmerica.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this,ChannelView.class);
+                    Intent intent = new Intent(MainActivity.this, ChannelView.class);
                     //TODO: pass URI to the live stream
                     intent.setData(Uri.parse(americaUrl));
                     //put extra didn't work so removed it
@@ -171,32 +167,40 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     }
+}
 
-    @Override
+    /*@Override
     protected void onStart() {
         super.OnStart();
         mMediaRouter.addCalback(mMediaRouteSelector , mMediaRouterCallback,
                 MediaRouter.CALLBACK_FLAG_REQUEST_DISCOVERY);
-    }
+    }*/
 
-    @Override
-    protected void onStop() {
-        mMediaRouter.removeCallback(mMediaRouterCallback);
-        super.onStop();
-    }
-    Cast.CastOptions.Builder apiOptionsBuilder = Cast.CastOptions
-            .builder(mSelectedDevice, mCastClientListener);
-
-    mApiClient = new GoogleApiClient.Builder(this)
-            .addApi(Cast.API, apiOptionsBuilder.build())
-            .addConnectionCallbacks(mConnectionCallbacks)
-    .addOnConnectionFailedListener(mConnectionFailedListener)
-    .build();
+//@Override
+//protected void onStop() {
+//mMediaRouter.removeCallback(mMediaRouterCallback);
+//super.onStop();
+//}
+//Cast.CastOptions.Builder apiOptionsBuilder = Cast.CastOptions
+//.builder(mSelectedDevice, mCastClientListener);
+//mApiClient = new GoogleApiClient.Builder(this)
 
 
-    //TODO:Creates the Options Menu
+//.addApi(Cast.API, apiOptionsBuilder.build())
+
+
+//.addConnectionCallbacks(mConnectionCallbacks)
+
+
+//.addOnConnectionFailedListener(mConnectionFailedListener)
+
+
+//.build();
+
+
+//TODO:Creates the Options Menu
     //Also assign mediaRouteSelector to MediaRouteActionProvider in the action Bar menu
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.streaming_menu,menu);
@@ -205,18 +209,18 @@ public class MainActivity extends AppCompatActivity {
                 (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
         mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
         return true;
-    }
+    }*/
 
-    @Override
+    /*@Override
     protected void onActivityResult (int requestCode, int resultCode, Intent data){
         if (requestCode == REQUEST_TAKE_VIDEO && resultCode == RESULT_OK){
             //disable video icon
             item.setVisible(false);
         }
-    }
+    }*/
 
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.select_device) {
             Intent returnHomeIntent = new Intent(getApplicationContext(),MainActivity.class);
@@ -256,19 +260,19 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
         return true;
-    }
+    }*/
 
     //TODO: Create and Name Video File (to Local Storage)
-    private File createVideoFile () throws IOException{
+    /*private File createVideoFile () throws IOException{
         //create an image FIle name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String videoFileName = "MP4_" + timeStamp + "_";
         //getExternalFilesDir makes photos to remain private to your app only
         File storageDir = getExternalFilesDir(null);
         File video = File.createTempFile(
-                videoFileName, /* [prefix */
-                "mp4",          /* suffix  */
-                storageDir      /* directory */
+                videoFileName, *//* [prefix *//*
+                "mp4",          *//* suffix  *//*
+                storageDir      *//* directory *//*
         );
         // Save the file: path for use with ACTION_VIEW intents
         currentVideoPath = video.getAbsolutePath();
@@ -276,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         return video;
 
         //TODO: MEdia Router CallBack
-        private class MyMediaRouterCallback extends MediaRouter.Callback {
+        *//*public class MyMediaRouterCallback extends MediaRouter.Callback {
 
             @Override
             public void onRouteSelected(MediaRouter router, MediaRouter.RouteInfo info) {
@@ -291,6 +295,6 @@ public class MainActivity extends AppCompatActivity {
                 mSelectedDevice = null;
             }
         }
-    }
+    }*//*
 
-}
+}*/
